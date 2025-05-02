@@ -1,9 +1,10 @@
 import NextAuth from 'next-auth'
+import type { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/libs/db'
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -39,10 +40,41 @@ export const authOptions = {
           id: userFound.id,
           name: userFound.username,
           email: userFound.email,
+          username: userFound.username,
+          birthdate: userFound.birthdate.toISOString(),
+          createdAt: userFound.createdAt.toISOString(),
+          updatedAt: userFound.updatedAt.toISOString(),
         }
       },
     }),
   ],
+  session: {
+    strategy: 'jwt',
+    maxAge: 60 * 60,
+    updateAge: 24 * 60 * 60,
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+        token.username = user.username
+        token.birthdate = user.birthdate
+        token.createdAt = user.createdAt
+        token.updatedAt = user.updatedAt
+      }
+      return token
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id
+        session.user.username = token.username
+        session.user.birthdate = token.birthdate
+        session.user.createdAt = token.createdAt
+        session.user.updatedAt = token.updatedAt
+      }
+      return session
+    },
+  },
 }
 
 const handler = NextAuth(authOptions)

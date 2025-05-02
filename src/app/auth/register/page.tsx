@@ -115,6 +115,19 @@ export default function Register() {
           )}
         </div>
 
+        <div className="flex flex-col gap-1 w-full">
+          <label htmlFor="birthdate" className="text-slate-600">
+            Fecha de nacimiento
+          </label>
+
+          <input
+            type="date"
+            id="birthdate"
+            {...register('birthdate')}
+            className="bg-slate-300 rounded-md p-1 border-[1px] border-slate-500 w-full"
+          />
+        </div>
+
         <button
           disabled={!isValid || isSubmitting}
           className="bg-blue-500 text-white py-1 rounded-md cursor-pointer w-full disabled:bg-gray-400 disabled:cursor-not-allowed"

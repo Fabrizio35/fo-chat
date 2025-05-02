@@ -7,10 +7,10 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
 
-    const { email, username, password } = data
+    const { email, username, password, birthdate } = data
 
     // We check that no data is missing
-    if (!email || !username || !password) {
+    if (!email || !username || !password || !birthdate) {
       return NextResponse.json({ message: 'Missing data' }, { status: 400 })
     }
 
@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
       data: {
         email,
         username,
+        birthdate: new Date(birthdate),
         password: hashedPassword,
       },
     })

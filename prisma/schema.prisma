@@ -20,4 +20,58 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  birthdate DateTime
+
+  sentRequests     ChatRequest[]     @relation("SenderRequests")
+  receivedRequests ChatRequest[]     @relation("ReceiverRequests")
+  chats            ChatParticipant[]
+  messages         Message[]         @relation("AuthorMessages")
+}
+
+model ChatRequest {
+  id         String        @id @default(uuid())
+  senderId   String
+  receiverId String
+  status     RequestStatus @default(PENDING)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  sender   User @relation("SenderRequests", fields: [senderId], references: [id])
+  receiver User @relation("ReceiverRequests", fields: [receiverId], references: [id])
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model Chat {
+  id           String            @id @default(uuid())
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  participants ChatParticipant[]
+  messages     Message[]
+}
+
+model ChatParticipant {
+  id     String @id @default(uuid())
+  chatId String
+  userId String
+
+  chat Chat @relation(fields: [chatId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  chatId    String
+  authorId  String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  chat   Chat @relation(fields: [chatId], references: [id])
+  author User @relation("AuthorMessages", fields: [authorId], references: [id])
 }
