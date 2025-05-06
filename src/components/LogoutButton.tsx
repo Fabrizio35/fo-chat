@@ -4,8 +4,6 @@ import { signOut, useSession } from 'next-auth/react'
 const LogoutButton: React.FC = () => {
   const session = useSession()
 
-  console.log(session)
-
   return (
     <div className="flex flex-col items-center gap-2">
       <span>

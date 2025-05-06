@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { API_ROUTES, ROUTES } from '@/routes'
 import { apiClient } from '@/apiClient'
+import Link from 'next/link'
 import toast from 'react-hot-toast'
 
 export default function Register() {
@@ -40,9 +41,9 @@ export default function Register() {
           toast.error('El email o el nombre de usuario ya están registrados')
         else toast.error('Error al registrar usuario')
       }
-    } catch (error) {
-      console.error(error)
-      toast.error('Error de conexión, intenta nuevamente')
+    } catch (error: unknown) {
+      if (error instanceof Error) toast.error(error.message)
+      else toast.error('Error de conexión, intenta nuevamente')
     } finally {
       setIsSubmitting(false)
     }
@@ -137,6 +138,13 @@ export default function Register() {
           {isSubmitting ? 'Registrando...' : 'Registrar'}
         </button>
       </form>
+
+      <div className="flex items-center gap-1 mx-auto w-fit">
+        <span>¿Ya tienes una cuenta?</span>
+        <Link href={ROUTES.AUTH.LOGIN} className="text-blue-500">
+          Iniciar sesión
+        </Link>
+      </div>
     </div>
   )
 }

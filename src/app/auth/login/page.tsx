@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { ROUTES } from '@/routes'
+import Link from 'next/link'
 import toast from 'react-hot-toast'
 
 export default function Login() {
@@ -39,9 +40,9 @@ export default function Login() {
         if (response.error === 'Incorrect password')
           toast.error('Contraseña incorrecta')
       } else router.push(ROUTES.HOME)
-    } catch (error) {
-      console.error(error)
-      toast.error('Error de conexión, intenta nuevamente')
+    } catch (error: unknown) {
+      if (error instanceof Error) toast.error(error.message)
+      else toast.error('Error de conexión, intenta nuevamente')
     } finally {
       setIsSubmitting(false)
     }
@@ -106,6 +107,13 @@ export default function Login() {
           {isSubmitting ? 'Iniciando...' : 'Iniciar sesión'}
         </button>
       </form>
+
+      <div className="flex items-center gap-1 mx-auto w-fit">
+        <span>¿Aún no tienes una cuenta?</span>
+        <Link href={ROUTES.AUTH.REGISTER} className="text-blue-500">
+          Registrarse
+        </Link>
+      </div>
     </div>
   )
 }

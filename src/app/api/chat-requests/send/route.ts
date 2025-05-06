@@ -36,6 +36,26 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    const existingChat = await prisma.chat.findFirst({
+      where: {
+        participants: {
+          some: { userId: senderId },
+        },
+        AND: {
+          participants: {
+            some: { userId: receiverId },
+          },
+        },
+      },
+    })
+
+    if (existingChat) {
+      return NextResponse.json(
+        { message: 'Chat already exists between users' },
+        { status: 400 }
+      )
+    }
+
     const request = await prisma.chatRequest.create({
       data: {
         senderId,
