@@ -16,13 +16,14 @@ export default function Register() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isValid },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     mode: 'onChange',
   })
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = async (data: RegisterFormData) => {
     setIsSubmitting(true)
 
     try {
@@ -31,6 +32,7 @@ export default function Register() {
       const responseJSON = await response.json()
 
       if (response.ok && response.status === 201) {
+        reset()
         toast.success('Usuario creado correctamente')
         router.push(ROUTES.AUTH.LOGIN)
       } else {
@@ -44,12 +46,12 @@ export default function Register() {
     } finally {
       setIsSubmitting(false)
     }
-  })
+  }
 
   return (
     <div>
       <form
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-2 items-center mt-5 max-w-sm mx-auto"
       >
         <h2 className="text-gray-900 font-semibold text-4xl">Registro</h2>

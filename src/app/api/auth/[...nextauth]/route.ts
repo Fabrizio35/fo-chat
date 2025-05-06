@@ -21,9 +21,12 @@ export const authOptions: AuthOptions = {
         },
       },
       async authorize(credentials, _req) {
-        const userFound = await prisma.user.findUnique({
+        const userFound = await prisma.user.findFirst({
           where: {
-            email: credentials?.email,
+            OR: [
+              { email: credentials?.email },
+              { username: credentials?.email },
+            ],
           },
         })
 
@@ -38,7 +41,6 @@ export const authOptions: AuthOptions = {
 
         return {
           id: userFound.id,
-          name: userFound.username,
           email: userFound.email,
           username: userFound.username,
           birthdate: userFound.birthdate.toISOString(),
@@ -57,6 +59,7 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
+        token.email = user.email
         token.username = user.username
         token.birthdate = user.birthdate
         token.createdAt = user.createdAt
@@ -67,6 +70,7 @@ export const authOptions: AuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id
+        session.user.email = token.email
         session.user.username = token.username
         session.user.birthdate = token.birthdate
         session.user.createdAt = token.createdAt

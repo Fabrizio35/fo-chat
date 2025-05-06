@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Providers } from '@/providers'
+import { Toaster } from 'react-hot-toast'
 import './globals.css'
 
 const inter = Inter({
@@ -8,8 +9,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'FO Message',
-  description: 'Messaging app',
+  title: 'FOChat',
+  description: 'Chat app',
 }
 
 export default function RootLayout({
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${inter.className} antialiased`}>
+        <Toaster position="bottom-right" toastOptions={{ duration: 4000 }} />
         <Providers>{children}</Providers>
       </body>
     </html>

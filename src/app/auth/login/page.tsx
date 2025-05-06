@@ -27,7 +27,7 @@ export default function Login() {
 
     try {
       const response = await signIn('credentials', {
-        email: data.email,
+        email: data.identifier,
         password: data.password,
         redirect: false,
       })
@@ -59,20 +59,22 @@ export default function Login() {
 
         <div className="flex flex-col gap-1 w-full">
           <label htmlFor="email" className="text-slate-600">
-            Email
+            Email o nombre de usuario
           </label>
 
           <input
-            id="email"
-            type="email"
-            placeholder="example@email.com"
-            autoComplete="email"
-            {...register('email')}
+            id="identifier"
+            type="text"
+            placeholder="Email o nombre de usuario"
+            autoComplete="username"
+            {...register('identifier')}
             className="bg-slate-300 rounded-md p-1 border-[1px] border-slate-500 w-full"
           />
 
-          {errors.email && (
-            <span className="text-red-500 text-xs">{errors.email.message}</span>
+          {errors.identifier && (
+            <span className="text-red-500 text-xs">
+              {errors.identifier.message}
+            </span>
           )}
         </div>
 

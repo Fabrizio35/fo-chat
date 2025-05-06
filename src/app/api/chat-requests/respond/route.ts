@@ -50,17 +50,27 @@ export async function POST(req: NextRequest) {
         },
       })
 
+      await prisma.chatRequest.delete({
+        where: { id: requestId },
+      })
+
       return NextResponse.json({ chat, updatedRequest }, { status: 200 })
-    } else if (action === 'reject') {
+    }
+
+    if (action === 'reject') {
       const updatedRequest = await prisma.chatRequest.update({
         where: { id: requestId },
         data: { status: 'REJECTED' },
       })
 
+      await prisma.chatRequest.delete({
+        where: { id: requestId },
+      })
+
       return NextResponse.json(updatedRequest, { status: 200 })
-    } else {
-      return NextResponse.json({ message: 'Invalid action' }, { status: 400 })
     }
+
+    return NextResponse.json({ message: 'Invalid action' }, { status: 400 })
   } catch (error) {
     console.error(error)
     return NextResponse.json(
