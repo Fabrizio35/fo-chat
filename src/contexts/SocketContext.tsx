@@ -1,27 +1,30 @@
 'use client'
-import { createContext, useContext, useEffect, useRef } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { io, Socket } from 'socket.io-client'
+import dotenv from 'dotenv'
 
-const SOCKET_URL = 'http://localhost:4000'
+dotenv.config()
+
+const PORT = process.env.SOCKET_PORT || 3001
+
+const SOCKET_URL = `http://localhost:${PORT}`
 
 const SocketContext = createContext<Socket | null>(null)
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
-  const socketRef = useRef<Socket | null>(null)
+  const [socket, setSocket] = useState<Socket | null>(null)
 
   useEffect(() => {
-    const socket = io(SOCKET_URL)
-    socketRef.current = socket
+    const socketInstance = io(SOCKET_URL)
+    setSocket(socketInstance)
 
     return () => {
-      socket.disconnect()
+      socketInstance.disconnect()
     }
   }, [])
 
   return (
-    <SocketContext.Provider value={socketRef.current}>
-      {children}
-    </SocketContext.Provider>
+    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
   )
 }
 

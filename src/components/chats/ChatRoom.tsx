@@ -19,17 +19,27 @@ interface ChatRoomProps {
 const ChatRoom: React.FC<ChatRoomProps> = ({ chatId, userId }) => {
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState<string>('')
+  const [error, setError] = useState<string | null>(null)
 
   const socket = useSocket()
 
   const handleSend = () => {
     if (newMessage.trim() === '') return
 
-    socket.emit('sendMessage', {
-      chatId,
-      senderId: userId,
-      content: newMessage,
-    })
+    setError(null)
+
+    socket.emit(
+      'sendMessage',
+      {
+        chatId,
+        senderId: userId,
+        content: newMessage,
+      },
+      (error: string | null) => {
+        if (error) setError('Error al enviar el mensaje. Intetna de nuevo.')
+        else setNewMessage('')
+      }
+    )
 
     setNewMessage('')
   }
@@ -71,6 +81,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ chatId, userId }) => {
           Enviar
         </button>
       </div>
+
+      {error && <span className="text-red-500 text-xs">{error}</span>}
     </div>
   )
 }

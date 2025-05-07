@@ -32,7 +32,17 @@ io.on('connection', (socket) => {
       },
     })
 
-    io.to(chatId).emit('newMessage', message)
+    const user = await prisma.user.findUnique({ where: { id: senderId } })
+
+    io.to(chatId).emit('newMessage', {
+      id: message.id,
+      chatId: message.chatId,
+      authorId: message.authorId,
+      content: message.content,
+      createdAt: message.createdAt,
+      updatedAt: message.updatedAt,
+      username: user?.username || 'Desconocido',
+    })
   })
 
   socket.on('disconnect', () => {

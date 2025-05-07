@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { apiClient } from '@/apiClient'
 import { API_ROUTES } from '@/routes'
+import { useChatStore } from '@/store/chatStore'
 import toast from 'react-hot-toast'
 
 type ChatRequest = {
@@ -17,6 +18,8 @@ type ChatRequest = {
 const ReceivedChatRequestsList: React.FC = () => {
   const [requests, setRequests] = useState<ChatRequest[]>([])
   const [loading, setLoading] = useState<boolean>(false)
+
+  const { fetchChats } = useChatStore()
 
   const fetchRequests = async () => {
     setLoading(true)
@@ -55,6 +58,10 @@ const ReceivedChatRequestsList: React.FC = () => {
       toast.success(msg)
 
       fetchRequests()
+
+      if (action === 'accept') {
+        await fetchChats()
+      }
     } catch (error: unknown) {
       if (error instanceof Error) toast.error(error.message)
       else toast.error('Error al procesar la solicitud')

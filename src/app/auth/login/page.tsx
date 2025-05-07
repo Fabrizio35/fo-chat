@@ -28,7 +28,7 @@ export default function Login() {
 
     try {
       const response = await signIn('credentials', {
-        email: data.identifier,
+        identifier: data.identifier,
         password: data.password,
         redirect: false,
       })
@@ -39,7 +39,10 @@ export default function Login() {
 
         if (response.error === 'Incorrect password')
           toast.error('Contraseña incorrecta')
-      } else router.push(ROUTES.HOME)
+      } else {
+        toast.success('Bienvenido')
+        router.push(ROUTES.HOME)
+      }
     } catch (error: unknown) {
       if (error instanceof Error) toast.error(error.message)
       else toast.error('Error de conexión, intenta nuevamente')
@@ -88,7 +91,7 @@ export default function Login() {
             id="password"
             type="password"
             placeholder="********"
-            autoComplete="new-password"
+            autoComplete="current-password"
             {...register('password')}
             className="bg-slate-300 rounded-md p-1 border-[1px] border-slate-500 w-full"
           />

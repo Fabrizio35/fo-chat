@@ -9,10 +9,9 @@ export const authOptions: AuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: {
-          label: 'Email',
+        identifier: {
+          label: 'Email o nombre de usuario',
           type: 'text',
-          placeholder: 'example@email.com',
         },
         password: {
           label: 'Password',
@@ -24,8 +23,8 @@ export const authOptions: AuthOptions = {
         const userFound = await prisma.user.findFirst({
           where: {
             OR: [
-              { email: credentials?.email },
-              { username: credentials?.email },
+              { email: credentials?.identifier },
+              { username: credentials?.identifier },
             ],
           },
         })
