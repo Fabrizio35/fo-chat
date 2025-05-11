@@ -2,13 +2,17 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../../auth/[...nextauth]/route'
 import { prisma } from '@/libs/db'
+import { ERRORS } from '@/constants/errors'
 
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
 
     if (!session || !session.user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json(
+        { message: ERRORS.UNAUTHORIZED },
+        { status: 401 }
+      )
     }
 
     const { requestId, action } = await req.json()
@@ -21,14 +25,14 @@ export async function POST(req: NextRequest) {
 
     if (!chatRequest) {
       return NextResponse.json(
-        { message: 'Request not found' },
+        { message: `Request ${ERRORS.NOT_FOUND}` },
         { status: 404 }
       )
     }
 
     if (chatRequest.receiverId !== userId) {
       return NextResponse.json(
-        { message: 'Unauthorized action' },
+        { message: `${ERRORS.UNAUTHORIZED} action` },
         { status: 403 }
       )
     }
@@ -74,7 +78,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error(error)
     return NextResponse.json(
-      { message: 'Internal Server Error' },
+      { message: ERRORS.INTERNAL_SERVER_ERROR },
       { status: 500 }
     )
   }

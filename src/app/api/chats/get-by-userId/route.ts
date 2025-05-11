@@ -2,13 +2,17 @@ import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../../auth/[...nextauth]/route'
 import { prisma } from '@/libs/db'
+import { ERRORS } from '@/constants/errors'
 
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)
 
     if (!session || !session.user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json(
+        { message: ERRORS.UNAUTHORIZED },
+        { status: 401 }
+      )
     }
 
     const userId = session.user.id
@@ -30,7 +34,7 @@ export async function GET() {
   } catch (error) {
     console.error(error)
     return NextResponse.json(
-      { message: 'Internal Server Error' },
+      { message: ERRORS.INTERNAL_SERVER_ERROR },
       { status: 500 }
     )
   }

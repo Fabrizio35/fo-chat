@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/libs/db'
 import bcrypt from 'bcryptjs'
 import { registerSchema } from '@/schemas/register.schema'
+import { ERRORS } from '@/constants/errors'
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,7 +12,10 @@ export async function POST(request: NextRequest) {
 
     // We check that no data is missing
     if (!email || !username || !password || !birthdate) {
-      return NextResponse.json({ message: 'Missing data' }, { status: 400 })
+      return NextResponse.json(
+        { message: ERRORS.MISSING_DATA },
+        { status: 400 }
+      )
     }
 
     // We check that the data is correct
@@ -19,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     if (!parsedData.success) {
       return NextResponse.json(
-        { message: 'Invalid data', errors: parsedData.error.format() },
+        { message: ERRORS.INVALID_DATA, errors: parsedData.error.format() },
         { status: 400 }
       )
     }
@@ -60,7 +64,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error(error)
     return NextResponse.json(
-      { message: 'Internal Server Error' },
+      { message: ERRORS.INTERNAL_SERVER_ERROR },
       { status: 500 }
     )
   }

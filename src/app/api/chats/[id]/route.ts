@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../../auth/[...nextauth]/route'
 import { prisma } from '@/libs/db'
+import { ERRORS } from '@/constants/errors'
 
 export async function GET(
   req: NextRequest,
@@ -11,7 +12,10 @@ export async function GET(
     const session = await getServerSession(authOptions)
 
     if (!session || !session.user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json(
+        { message: ERRORS.UNAUTHORIZED },
+        { status: 401 }
+      )
     }
 
     const chatId = params.id
@@ -30,7 +34,10 @@ export async function GET(
     })
 
     if (!chat) {
-      return NextResponse.json({ message: 'Chat not found' }, { status: 401 })
+      return NextResponse.json(
+        { message: `Chat ${ERRORS.NOT_FOUND}` },
+        { status: 401 }
+      )
     }
 
     const isParticipant = chat.participants.some(
@@ -38,14 +45,14 @@ export async function GET(
     )
 
     if (!isParticipant) {
-      return NextResponse.json({ message: 'Access denied' }, { status: 403 })
+      return NextResponse.json({ message: ERRORS.FORDBIDDEN }, { status: 403 })
     }
 
     return NextResponse.json(chat, { status: 200 })
   } catch (error) {
     console.error(error)
     return NextResponse.json(
-      { message: 'Internal Server Error' },
+      { message: ERRORS.INTERNAL_SERVER_ERROR },
       { status: 500 }
     )
   }
