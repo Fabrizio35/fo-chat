@@ -3,7 +3,6 @@ import type { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/libs/db'
-import jwt from 'jsonwebtoken'
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -15,7 +14,7 @@ export const authOptions: AuthOptions = {
           type: 'text',
         },
         password: {
-          label: 'Password',
+          label: 'Contraseña',
           type: 'password',
           placeholder: '********',
         },
@@ -64,14 +63,6 @@ export const authOptions: AuthOptions = {
         token.birthdate = user.birthdate
         token.createdAt = user.createdAt
         token.updatedAt = user.updatedAt
-
-        const accessToken = jwt.sign(
-          { id: user.id, email: user.email, username: user.username },
-          process.env.JWT_SECRET!,
-          { expiresIn: '1h' }
-        )
-
-        token.accessToken = accessToken
       }
 
       return token
@@ -84,7 +75,6 @@ export const authOptions: AuthOptions = {
         session.user.birthdate = token.birthdate
         session.user.createdAt = token.createdAt
         session.user.updatedAt = token.updatedAt
-        session.accessToken = token.accessToken
       }
       return session
     },

@@ -13,9 +13,11 @@ const ChatPage = async ({ params }: Props) => {
 
   if (!session || !session.user) redirect(ROUTES.AUTH.LOGIN)
 
+  const { id } = await params
+
   return (
     <div className="max-w-2xl mx-auto mt-4">
-      <ChatRoom chatId={params.id} userId={session.user.id} />
+      <ChatRoom chatId={id} userId={session.user.id} />
     </div>
   )
 }
