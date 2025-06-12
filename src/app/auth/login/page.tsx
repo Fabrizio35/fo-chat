@@ -35,7 +35,9 @@ export default function Login() {
 
       if (response?.error) {
         if (response.error === 'No user found')
-          toast.error('No se encuentra un usuario con ese email')
+          toast.error(
+            'No se encuentra un usuario con ese email o nombre de usuario'
+          )
 
         if (response.error === 'Incorrect password')
           toast.error('Contraseña incorrecta')

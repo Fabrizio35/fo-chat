@@ -23,7 +23,7 @@ const Message: React.FC<MessageProps> = ({ message, userId }) => {
   }
 
   return (
-    <div key={message.id}>
+    <div>
       <strong>{message.authorId === userId ? 'Yo' : 'Otro'}:</strong>{' '}
       {message.content}
       <span className="text-xs text-gray-400 ml-2">{hourFormat()}</span>

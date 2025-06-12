@@ -29,7 +29,7 @@ export const useChatStore = create<ChatStore>((set) => ({
   fetchChats: async () => {
     set({ loading: true })
     try {
-      const res = await apiClient(API_ROUTES.CHATS.GET_BY_USER_ID, 'GET')
+      const res = await apiClient(API_ROUTES.CHATS.GET_BY_USER_ID)
 
       if (!res.ok) throw new Error('Error al cargar los chats')
 
