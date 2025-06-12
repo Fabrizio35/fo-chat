@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "dev:sockets": "nodemon --watch server --ext ts --exec ts-node -r dotenv/config --project tsconfig.socket.json server/socket-server.ts",
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:sockets\"",
     "start:sockets": "ts-node -r dotenv/config server/socket-server.ts",
